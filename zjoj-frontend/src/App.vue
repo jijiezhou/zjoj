@@ -13,6 +13,18 @@
 import BasicLayout from "@/layouts/BasicLayout.vue";
 import { useRouter } from "vue-router";
 import store from "@/store";
+import { onMounted } from "vue";
+
+/**
+ * Global Entry function, code that only call once
+ */
+const doInit = () => {
+  console.log("This is entry for whole project");
+};
+
+onMounted(() => {
+  doInit();
+});
 
 const router = useRouter();
 
