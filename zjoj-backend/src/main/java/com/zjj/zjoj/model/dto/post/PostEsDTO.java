@@ -1,8 +1,8 @@
-package com.yupi.zjoj.model.dto.post;
+package com.zjj.zjoj.model.dto.post;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
-import com.yupi.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.Post;
 import lombok.Data;
 
 import org.apache.commons.lang3.StringUtils;

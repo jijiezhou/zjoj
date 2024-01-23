@@ -1,7 +1,7 @@
-package com.yupi.zjoj.mapper;
+package com.zjj.zjoj.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yupi.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.Post;
 import java.util.Date;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.yupi.zjoj.service;
+package com.zjj.zjoj.service;
 
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;

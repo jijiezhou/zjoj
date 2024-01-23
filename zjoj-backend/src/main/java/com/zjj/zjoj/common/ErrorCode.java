@@ -1,4 +1,4 @@
-package com.yupi.zjoj.common;
+package com.zjj.zjoj.common;
 
 /**
  * 自定义错误码

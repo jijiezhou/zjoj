@@ -1,4 +1,4 @@
-package com.yupi.zjoj.model.enums;
+package com.zjj.zjoj.model.enums;
 
 import java.util.Arrays;
 import java.util.List;

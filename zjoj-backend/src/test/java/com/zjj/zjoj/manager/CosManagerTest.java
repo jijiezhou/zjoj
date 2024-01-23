@@ -1,4 +1,4 @@
-package com.yupi.zjoj.manager;
+package com.zjj.zjoj.manager;
 
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Test;

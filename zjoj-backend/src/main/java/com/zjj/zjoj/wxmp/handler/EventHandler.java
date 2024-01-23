@@ -1,4 +1,4 @@
-package com.yupi.zjoj.wxmp.handler;
+package com.zjj.zjoj.wxmp.handler;
 
 import java.util.Map;
 import me.chanjar.weixin.common.error.WxErrorException;

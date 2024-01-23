@@ -1,4 +1,4 @@
-package com.yupi.zjoj.model.vo;
+package com.zjj.zjoj.model.vo;
 
 import java.io.Serializable;
 import java.util.Date;

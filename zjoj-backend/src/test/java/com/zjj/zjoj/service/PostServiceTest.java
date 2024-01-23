@@ -1,8 +1,8 @@
-package com.yupi.zjoj.service;
+package com.zjj.zjoj.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yupi.zjoj.model.dto.post.PostQueryRequest;
-import com.yupi.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.dto.post.PostQueryRequest;
+import com.zjj.zjoj.model.entity.Post;
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

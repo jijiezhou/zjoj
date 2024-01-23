@@ -1,4 +1,4 @@
-package com.yupi.zjoj.utils;
+package com.zjj.zjoj.utils;
 
 import java.net.InetAddress;
 import javax.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
-package com.yupi.zjoj.common;
+package com.zjj.zjoj.common;
 
-import com.yupi.zjoj.constant.CommonConstant;
+import com.zjj.zjoj.constant.CommonConstant;
 import lombok.Data;
 
 /**

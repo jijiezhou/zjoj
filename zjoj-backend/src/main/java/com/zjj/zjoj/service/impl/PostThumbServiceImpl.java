@@ -1,15 +1,15 @@
-package com.yupi.zjoj.service.impl;
+package com.zjj.zjoj.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yupi.zjoj.common.ErrorCode;
-import com.yupi.zjoj.exception.BusinessException;
-import com.yupi.zjoj.mapper.PostThumbMapper;
-import com.yupi.zjoj.model.entity.Post;
-import com.yupi.zjoj.model.entity.PostThumb;
-import com.yupi.zjoj.model.entity.User;
-import com.yupi.zjoj.service.PostService;
-import com.yupi.zjoj.service.PostThumbService;
+import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.exception.BusinessException;
+import com.zjj.zjoj.mapper.PostThumbMapper;
+import com.zjj.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.PostThumb;
+import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.service.PostService;
+import com.zjj.zjoj.service.PostThumbService;
 import javax.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;

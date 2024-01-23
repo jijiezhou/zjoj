@@ -1,6 +1,6 @@
-package com.yupi.zjoj.mapper;
+package com.zjj.zjoj.mapper;
 
-import com.yupi.zjoj.model.entity.PostThumb;
+import com.zjj.zjoj.model.entity.PostThumb;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

@@ -1,16 +1,16 @@
-package com.yupi.zjoj.controller;
+package com.zjj.zjoj.controller;
 
 import cn.hutool.core.io.FileUtil;
-import com.yupi.zjoj.common.BaseResponse;
-import com.yupi.zjoj.common.ErrorCode;
-import com.yupi.zjoj.common.ResultUtils;
-import com.yupi.zjoj.constant.FileConstant;
-import com.yupi.zjoj.exception.BusinessException;
-import com.yupi.zjoj.manager.CosManager;
-import com.yupi.zjoj.model.dto.file.UploadFileRequest;
-import com.yupi.zjoj.model.entity.User;
-import com.yupi.zjoj.model.enums.FileUploadBizEnum;
-import com.yupi.zjoj.service.UserService;
+import com.zjj.zjoj.common.BaseResponse;
+import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.common.ResultUtils;
+import com.zjj.zjoj.constant.FileConstant;
+import com.zjj.zjoj.exception.BusinessException;
+import com.zjj.zjoj.manager.CosManager;
+import com.zjj.zjoj.model.dto.file.UploadFileRequest;
+import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.enums.FileUploadBizEnum;
+import com.zjj.zjoj.service.UserService;
 import java.io.File;
 import java.util.Arrays;
 import javax.annotation.Resource;

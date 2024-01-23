@@ -1,4 +1,4 @@
-package com.yupi.zjoj.constant;
+package com.zjj.zjoj.constant;
 
 /**
  * 通用常量
@@ -17,5 +17,5 @@ public interface CommonConstant {
      * 降序
      */
     String SORT_ORDER_DESC = " descend";
-    
+
 }

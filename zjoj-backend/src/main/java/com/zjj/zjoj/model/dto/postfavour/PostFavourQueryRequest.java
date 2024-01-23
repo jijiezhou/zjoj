@@ -1,7 +1,7 @@
-package com.yupi.zjoj.model.dto.postfavour;
+package com.zjj.zjoj.model.dto.postfavour;
 
-import com.yupi.zjoj.common.PageRequest;
-import com.yupi.zjoj.model.dto.post.PostQueryRequest;
+import com.zjj.zjoj.common.PageRequest;
+import com.zjj.zjoj.model.dto.post.PostQueryRequest;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

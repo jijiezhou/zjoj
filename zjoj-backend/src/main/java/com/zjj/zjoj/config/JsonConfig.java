@@ -1,4 +1,4 @@
-package com.yupi.zjoj.config;
+package com.zjj.zjoj.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

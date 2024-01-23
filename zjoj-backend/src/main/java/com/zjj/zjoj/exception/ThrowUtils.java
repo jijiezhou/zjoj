@@ -1,6 +1,6 @@
-package com.yupi.zjoj.exception;
+package com.zjj.zjoj.exception;
 
-import com.yupi.zjoj.common.ErrorCode;
+import com.zjj.zjoj.common.ErrorCode;
 
 /**
  * 抛异常工具类

@@ -1,9 +1,9 @@
-package com.yupi.zjoj.job.once;
+package com.zjj.zjoj.job.once;
 
-import com.yupi.zjoj.esdao.PostEsDao;
-import com.yupi.zjoj.model.dto.post.PostEsDTO;
-import com.yupi.zjoj.model.entity.Post;
-import com.yupi.zjoj.service.PostService;
+import com.zjj.zjoj.esdao.PostEsDao;
+import com.zjj.zjoj.model.dto.post.PostEsDTO;
+import com.zjj.zjoj.model.entity.Post;
+import com.zjj.zjoj.service.PostService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;

@@ -1,4 +1,4 @@
-package com.yupi.zjoj.config;
+package com.zjj.zjoj.config;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;

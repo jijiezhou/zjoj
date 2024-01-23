@@ -1,13 +1,13 @@
-package com.yupi.zjoj.controller;
+package com.zjj.zjoj.controller;
 
-import com.yupi.zjoj.common.BaseResponse;
-import com.yupi.zjoj.common.ErrorCode;
-import com.yupi.zjoj.common.ResultUtils;
-import com.yupi.zjoj.exception.BusinessException;
-import com.yupi.zjoj.model.dto.postthumb.PostThumbAddRequest;
-import com.yupi.zjoj.model.entity.User;
-import com.yupi.zjoj.service.PostThumbService;
-import com.yupi.zjoj.service.UserService;
+import com.zjj.zjoj.common.BaseResponse;
+import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.common.ResultUtils;
+import com.zjj.zjoj.exception.BusinessException;
+import com.zjj.zjoj.model.dto.postthumb.PostThumbAddRequest;
+import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.service.PostThumbService;
+import com.zjj.zjoj.service.UserService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

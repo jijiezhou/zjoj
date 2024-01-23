@@ -1,6 +1,6 @@
-package com.yupi.zjoj.mapper;
+package com.zjj.zjoj.mapper;
 
-import com.yupi.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.Post;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;

@@ -1,7 +1,7 @@
-package com.yupi.zjoj.model.vo;
+package com.zjj.zjoj.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.yupi.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.Post;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

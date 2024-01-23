@@ -1,4 +1,4 @@
-package com.yupi.zjoj.constant;
+package com.zjj.zjoj.constant;
 
 /**
  * 用户常量

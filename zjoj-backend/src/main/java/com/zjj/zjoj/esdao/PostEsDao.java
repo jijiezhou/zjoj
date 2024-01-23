@@ -1,6 +1,6 @@
-package com.yupi.zjoj.esdao;
+package com.zjj.zjoj.esdao;
 
-import com.yupi.zjoj.model.dto.post.PostEsDTO;
+import com.zjj.zjoj.model.dto.post.PostEsDTO;
 import java.util.List;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 

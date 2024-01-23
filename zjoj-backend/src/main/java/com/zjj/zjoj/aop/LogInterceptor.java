@@ -1,4 +1,4 @@
-package com.yupi.zjoj.aop;
+package com.zjj.zjoj.aop;
 
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class LogInterceptor {
     /**
      * 执行拦截
      */
-    @Around("execution(* com.yupi.zjoj.controller.*.*(..))")
+    @Around("execution(* com.zjj.zjoj.controller.*.*(..))")
     public Object doInterceptor(ProceedingJoinPoint point) throws Throwable {
         // 计时
         StopWatch stopWatch = new StopWatch();

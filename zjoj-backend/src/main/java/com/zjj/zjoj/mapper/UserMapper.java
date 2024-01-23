@@ -1,7 +1,7 @@
-package com.yupi.zjoj.mapper;
+package com.zjj.zjoj.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yupi.zjoj.model.entity.User;
+import com.zjj.zjoj.model.entity.User;
 
 /**
  * 用户数据库操作

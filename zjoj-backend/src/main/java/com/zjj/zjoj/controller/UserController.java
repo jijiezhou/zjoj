@@ -1,25 +1,25 @@
-package com.yupi.zjoj.controller;
+package com.zjj.zjoj.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yupi.zjoj.annotation.AuthCheck;
-import com.yupi.zjoj.common.BaseResponse;
-import com.yupi.zjoj.common.DeleteRequest;
-import com.yupi.zjoj.common.ErrorCode;
-import com.yupi.zjoj.common.ResultUtils;
-import com.yupi.zjoj.config.WxOpenConfig;
-import com.yupi.zjoj.constant.UserConstant;
-import com.yupi.zjoj.exception.BusinessException;
-import com.yupi.zjoj.exception.ThrowUtils;
-import com.yupi.zjoj.model.dto.user.UserAddRequest;
-import com.yupi.zjoj.model.dto.user.UserLoginRequest;
-import com.yupi.zjoj.model.dto.user.UserQueryRequest;
-import com.yupi.zjoj.model.dto.user.UserRegisterRequest;
-import com.yupi.zjoj.model.dto.user.UserUpdateMyRequest;
-import com.yupi.zjoj.model.dto.user.UserUpdateRequest;
-import com.yupi.zjoj.model.entity.User;
-import com.yupi.zjoj.model.vo.LoginUserVO;
-import com.yupi.zjoj.model.vo.UserVO;
-import com.yupi.zjoj.service.UserService;
+import com.zjj.zjoj.annotation.AuthCheck;
+import com.zjj.zjoj.common.BaseResponse;
+import com.zjj.zjoj.common.DeleteRequest;
+import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.common.ResultUtils;
+import com.zjj.zjoj.config.WxOpenConfig;
+import com.zjj.zjoj.constant.UserConstant;
+import com.zjj.zjoj.exception.BusinessException;
+import com.zjj.zjoj.exception.ThrowUtils;
+import com.zjj.zjoj.model.dto.user.UserAddRequest;
+import com.zjj.zjoj.model.dto.user.UserLoginRequest;
+import com.zjj.zjoj.model.dto.user.UserQueryRequest;
+import com.zjj.zjoj.model.dto.user.UserRegisterRequest;
+import com.zjj.zjoj.model.dto.user.UserUpdateMyRequest;
+import com.zjj.zjoj.model.dto.user.UserUpdateRequest;
+import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.vo.LoginUserVO;
+import com.zjj.zjoj.model.vo.UserVO;
+import com.zjj.zjoj.service.UserService;
 
 import java.util.List;
 import javax.annotation.Resource;
@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.yupi.zjoj.service.impl.UserServiceImpl.SALT;
+import static com.zjj.zjoj.service.impl.UserServiceImpl.SALT;
 
 /**
  * 用户接口

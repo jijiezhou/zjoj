@@ -1,11 +1,11 @@
-package com.yupi.zjoj.service;
+package com.zjj.zjoj.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.zjoj.model.dto.post.PostQueryRequest;
-import com.yupi.zjoj.model.entity.Post;
-import com.yupi.zjoj.model.vo.PostVO;
+import com.zjj.zjoj.model.dto.post.PostQueryRequest;
+import com.zjj.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.vo.PostVO;
 import javax.servlet.http.HttpServletRequest;
 
 /**

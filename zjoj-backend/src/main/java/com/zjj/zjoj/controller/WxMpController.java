@@ -1,6 +1,6 @@
-package com.yupi.zjoj.controller;
+package com.zjj.zjoj.controller;
 
-import com.yupi.zjoj.wxmp.WxMpConstant;
+import com.zjj.zjoj.wxmp.WxMpConstant;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.yupi.zjoj.common;
+package com.zjj.zjoj.common;
 
 /**
  * 返回工具类

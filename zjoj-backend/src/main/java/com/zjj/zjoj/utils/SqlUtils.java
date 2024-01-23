@@ -1,4 +1,4 @@
-package com.yupi.zjoj.utils;
+package com.zjj.zjoj.utils;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,9 +1,9 @@
-package com.yupi.zjoj.service;
+package com.zjj.zjoj.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yupi.zjoj.model.entity.Post;
-import com.yupi.zjoj.model.entity.User;
+import com.zjj.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.User;
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

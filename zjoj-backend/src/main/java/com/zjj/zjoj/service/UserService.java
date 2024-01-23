@@ -1,11 +1,11 @@
-package com.yupi.zjoj.service;
+package com.zjj.zjoj.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.zjoj.model.dto.user.UserQueryRequest;
-import com.yupi.zjoj.model.entity.User;
-import com.yupi.zjoj.model.vo.LoginUserVO;
-import com.yupi.zjoj.model.vo.UserVO;
+import com.zjj.zjoj.model.dto.user.UserQueryRequest;
+import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.vo.LoginUserVO;
+import com.zjj.zjoj.model.vo.UserVO;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;

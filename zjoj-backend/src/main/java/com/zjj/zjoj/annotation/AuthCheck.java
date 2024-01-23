@@ -1,4 +1,4 @@
-package com.yupi.zjoj.annotation;
+package com.zjj.zjoj.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

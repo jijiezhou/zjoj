@@ -1,9 +1,9 @@
-package com.yupi.zjoj.job.cycle;
+package com.zjj.zjoj.job.cycle;
 
-import com.yupi.zjoj.esdao.PostEsDao;
-import com.yupi.zjoj.mapper.PostMapper;
-import com.yupi.zjoj.model.dto.post.PostEsDTO;
-import com.yupi.zjoj.model.entity.Post;
+import com.zjj.zjoj.esdao.PostEsDao;
+import com.zjj.zjoj.mapper.PostMapper;
+import com.zjj.zjoj.model.dto.post.PostEsDTO;
+import com.zjj.zjoj.model.entity.Post;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.yupi.zjoj.config;
+package com.zjj.zjoj.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

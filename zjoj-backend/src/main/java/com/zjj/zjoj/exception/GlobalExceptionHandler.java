@@ -1,8 +1,8 @@
-package com.yupi.zjoj.exception;
+package com.zjj.zjoj.exception;
 
-import com.yupi.zjoj.common.BaseResponse;
-import com.yupi.zjoj.common.ErrorCode;
-import com.yupi.zjoj.common.ResultUtils;
+import com.zjj.zjoj.common.BaseResponse;
+import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.common.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

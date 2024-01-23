@@ -1,12 +1,12 @@
-package com.yupi.zjoj.service;
+package com.zjj.zjoj.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.zjoj.model.entity.Post;
-import com.yupi.zjoj.model.entity.PostFavour;
-import com.yupi.zjoj.model.entity.User;
+import com.zjj.zjoj.model.entity.Post;
+import com.zjj.zjoj.model.entity.PostFavour;
+import com.zjj.zjoj.model.entity.User;
 
 /**
  * 帖子收藏服务

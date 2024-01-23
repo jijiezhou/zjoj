@@ -1,11 +1,11 @@
-package com.yupi.zjoj.aop;
+package com.zjj.zjoj.aop;
 
-import com.yupi.zjoj.annotation.AuthCheck;
-import com.yupi.zjoj.common.ErrorCode;
-import com.yupi.zjoj.exception.BusinessException;
-import com.yupi.zjoj.model.entity.User;
-import com.yupi.zjoj.model.enums.UserRoleEnum;
-import com.yupi.zjoj.service.UserService;
+import com.zjj.zjoj.annotation.AuthCheck;
+import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.exception.BusinessException;
+import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.enums.UserRoleEnum;
+import com.zjj.zjoj.service.UserService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;

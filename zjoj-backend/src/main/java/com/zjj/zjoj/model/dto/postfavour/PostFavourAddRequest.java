@@ -1,4 +1,4 @@
-package com.yupi.zjoj.model.dto.postfavour;
+package com.zjj.zjoj.model.dto.postfavour;
 
 import java.io.Serializable;
 import lombok.Data;

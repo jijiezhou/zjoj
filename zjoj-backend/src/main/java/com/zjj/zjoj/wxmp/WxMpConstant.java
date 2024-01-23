@@ -1,4 +1,4 @@
-package com.yupi.zjoj.wxmp;
+package com.zjj.zjoj.wxmp;
 
 /**
  * 微信公众号相关常量

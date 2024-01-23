@@ -1,4 +1,4 @@
-package com.yupi.zjoj.model.dto.user;
+package com.zjj.zjoj.model.dto.user;
 
 import java.io.Serializable;
 import lombok.Data;
