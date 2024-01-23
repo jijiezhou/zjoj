@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <BasicLayout />
+    <template v-if="route.path.startsWith('/user')">
+      <router-view />
+    </template>
+    <template v-else>
+      <BasicLayout />
+    </template>
   </div>
 </template>
 
@@ -11,9 +16,10 @@
 
 <script setup lang="ts">
 import BasicLayout from "@/layouts/BasicLayout";
-import { useRouter } from "vue-router";
-import store from "@/store";
+import { useRoute, useRouter } from "vue-router";
 import { onMounted } from "vue";
+
+const route = useRoute();
 
 /**
  * Global Entry function, code that only call once
