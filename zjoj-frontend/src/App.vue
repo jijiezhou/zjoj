@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import BasicLayout from "@/layouts/BasicLayout";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { onMounted } from "vue";
 
 const route = useRoute();
@@ -31,6 +31,4 @@ const doInit = () => {
 onMounted(() => {
   doInit();
 });
-
-const router = useRouter();
 </script>

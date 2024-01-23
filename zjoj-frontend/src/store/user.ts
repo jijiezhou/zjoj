@@ -15,8 +15,8 @@ export default {
       //get loginUser from backend
       const res = await UserControllerService.getLoginUserUsingGet();
       //success
-      if (res === 0) {
-        commit("updateUser", payload);
+      if (res.code === 0) {
+        commit("updateUser", res.data);
       } else {
         commit("updateUser", {
           ...state.loginUser,

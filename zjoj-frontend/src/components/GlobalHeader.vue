@@ -48,8 +48,12 @@ const visibleRoutes = computed(() => {
     }
     //todo based on permission to authenticate menu
     //filter menu based on permission
-    if (!checkAccess(store.state.user.loginUser, item?.meta?.access as string))
+    if (
+      !checkAccess(store.state.user.loginUser, item?.meta?.access as string)
+    ) {
       return false;
+    }
+
     return true;
   });
 });
@@ -68,12 +72,12 @@ const doMenuClick = (key: string) => {
   });
 };
 
-setTimeout(() => {
-  store.dispatch("user/getLoginUser", {
-    userName: "zjj",
-    userRole: ACCESS_ENUM.ADMIN,
-  });
-}, 3000);
+// setTimeout(() => {
+//   store.dispatch("user/getLoginUser", {
+//     userName: "zjj",
+//     userRole: ACCESS_ENUM.ADMIN,
+//   });
+// }, 3000);
 </script>
 
 <style scoped>
