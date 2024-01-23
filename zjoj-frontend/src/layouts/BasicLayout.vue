@@ -8,7 +8,7 @@
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
-        <a href="" target="_blank">Footer</a>
+        <a href="" target="_blank"> Footer </a>
       </a-layout-footer>
     </a-layout>
   </div>
@@ -19,12 +19,12 @@
 }
 
 #basicLayout .header {
-  box-shadow: #eee 1px 1px 1px;
   margin-bottom: 16px;
+  box-shadow: #eee 1px 1px 5px;
 }
 
 #basicLayout .content {
-  background: linear-gradient(to right, #eee, #fff);
+  background: linear-gradient(to right, #fefefe, #fff);
   margin-bottom: 16px;
   padding: 20px;
 }
@@ -39,6 +39,10 @@
   text-align: center;
 }
 </style>
-<script setup lang="ts">
-import GlobalHeader from "@/components/GlobalHeader.vue";
+<script>
+import GlobalHeader from "@/components/GlobalHeader";
+
+export default {
+  components: { GlobalHeader },
+};
 </script>

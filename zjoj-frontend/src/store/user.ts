@@ -1,5 +1,7 @@
 // initial state
 import { StoreOptions } from "vuex";
+import { UserControllerService } from "../../generated";
+import ACCESS_ENUM from "@/access/accessEnum";
 
 export default {
   namespaced: true,
@@ -10,8 +12,17 @@ export default {
   }),
   actions: {
     async getLoginUser({ commit, state }, payload) {
-      //console.log("getLoginUser action called with payload:", payload);
-      commit("updateUser", payload);
+      //get loginUser from backend
+      const res = await UserControllerService.getLoginUserUsingGet();
+      //success
+      if (res === 0) {
+        commit("updateUser", payload);
+      } else {
+        commit("updateUser", {
+          ...state.loginUser,
+          userRole: ACCESS_ENUM.NOT_LOGIN,
+        });
+      }
     },
   },
   mutations: {
