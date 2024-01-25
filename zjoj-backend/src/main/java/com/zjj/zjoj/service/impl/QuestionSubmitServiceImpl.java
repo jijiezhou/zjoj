@@ -9,6 +9,8 @@ import com.zjj.zjoj.model.entity.Question;
 import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.enums.QuestionSubmitLanguageEnum;
+import com.zjj.zjoj.model.enums.QuestionSubmitStatusEnum;
 import com.zjj.zjoj.service.QuestionService;
 import com.zjj.zjoj.service.QuestionSubmitService;
 import com.zjj.zjoj.service.QuestionSubmitService;
@@ -20,13 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
-* @author zj
-* @description 【question_submit(question submit)】ServiceIml
-* @createDate 2024-01-24 15:02:18
-*/
+ * @author zj
+ * @description 【question_submit(question submit)】ServiceIml
+ * @createDate 2024-01-24 15:02:18
+ */
 @Service
 public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper, QuestionSubmit>
-    implements QuestionSubmitService{
+        implements QuestionSubmitService {
     @Resource
     private QuestionService questionService;
 
@@ -39,6 +41,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
      */
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser) {
+        //check if language legal
+        String language = questionSubmitAddRequest.getLanguage();
+        QuestionSubmitLanguageEnum languageEnum = QuestionSubmitLanguageEnum.getEnumByValue(language);
+        if (languageEnum == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "language error");
+        }
+
         long questionId = questionSubmitAddRequest.getQuestionId();
         // check if entity exist
         Question question = questionService.getById(questionId);
@@ -52,14 +61,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         questionSubmit.setUserId(userId);
         questionSubmit.setQuestionId(questionId);
         questionSubmit.setCode(questionSubmitAddRequest.getCode());
-        //todo check if language legal
-        questionSubmit.setLanguage(questionSubmitAddRequest.getLanguage());
-        //todo set initial state
-        questionSubmit.setStatus(0);
+        questionSubmit.setLanguage(language);
+        //set initial state: waiting
+        questionSubmit.setStatus(QuestionSubmitStatusEnum.WAITING.getValue());
         questionSubmit.setJudgeInfo("{}");
         // lock: business user can only submit 1 question at a single time
         boolean save = this.save(questionSubmit);
-        if (!save){
+        if (!save) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "data insert fail");
         }
         return questionSubmit.getId();

@@ -2,6 +2,7 @@ package com.zjj.zjoj.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.zjj.zjoj.annotation.AuthCheck;
 import com.zjj.zjoj.common.BaseResponse;
 import com.zjj.zjoj.common.DeleteRequest;
@@ -10,10 +11,7 @@ import com.zjj.zjoj.common.ResultUtils;
 import com.zjj.zjoj.constant.UserConstant;
 import com.zjj.zjoj.exception.BusinessException;
 import com.zjj.zjoj.exception.ThrowUtils;
-import com.zjj.zjoj.model.dto.question.QuestionAddRequest;
-import com.zjj.zjoj.model.dto.question.QuestionEditRequest;
-import com.zjj.zjoj.model.dto.question.QuestionQueryRequest;
-import com.zjj.zjoj.model.dto.question.QuestionUpdateRequest;
+import com.zjj.zjoj.model.dto.question.*;
 import com.zjj.zjoj.model.entity.Question;
 import com.zjj.zjoj.model.entity.User;
 import com.zjj.zjoj.model.vo.QuestionVO;
@@ -46,6 +44,8 @@ public class QuestionController {
     @Resource
     private UserService userService;
 
+    private final static Gson GSON = new Gson();
+
     // CRUD
 
     /**
@@ -64,8 +64,18 @@ public class QuestionController {
         BeanUtils.copyProperties(questionAddRequest, question);
         List<String> tags = questionAddRequest.getTags();
         if (tags != null) {
-            question.setTags(JSONUtil.toJsonStr(tags));
+            question.setTags((GSON.toJson(tags)));
         }
+        //add judgeCase and judgeConfig
+        List<JudgeCase> judgeCases = questionAddRequest.getJudgeCase();
+        if (judgeCases != null){
+            question.setJudgeCase(GSON.toJson(judgeCases));
+        }
+        List<JudgeConfig> judgeConfigs = questionAddRequest.getJudgeConfig();
+        if (judgeConfigs != null){
+            question.setJudgeConfig(GSON.toJson(judgeConfigs));
+        }
+
         questionService.validQuestion(question, true);
         User loginUser = userService.getLoginUser(request);
         question.setUserId(loginUser.getId());
@@ -119,6 +129,15 @@ public class QuestionController {
         List<String> tags = questionUpdateRequest.getTags();
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
+        }
+        //add judgeCase and judgeConfig
+        List<JudgeCase> judgeCases = questionUpdateRequest.getJudgeCase();
+        if (judgeCases != null){
+            question.setJudgeCase(GSON.toJson(judgeCases));
+        }
+        List<JudgeConfig> judgeConfigs = questionUpdateRequest.getJudgeConfig();
+        if (judgeConfigs != null){
+            question.setJudgeConfig(GSON.toJson(judgeConfigs));
         }
         // validate parameters
         questionService.validQuestion(question, false);
@@ -226,6 +245,15 @@ public class QuestionController {
         List<String> tags = questionEditRequest.getTags();
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
+        }
+        //add judgeCase and judgeConfig
+        List<JudgeCase> judgeCases = questionEditRequest.getJudgeCase();
+        if (judgeCases != null){
+            question.setJudgeCase(GSON.toJson(judgeCases));
+        }
+        List<JudgeConfig> judgeConfigs = questionEditRequest.getJudgeConfig();
+        if (judgeConfigs != null){
+            question.setJudgeConfig(GSON.toJson(judgeConfigs));
         }
         // validation
         questionService.validQuestion(question, false);

@@ -41,7 +41,7 @@ public enum QuestionSubmitLanguageEnum {
      * @param value
      * @return
      */
-    public static QuestionSubmitLanguageEnum getEnumByValue(Integer value) {
+    public static QuestionSubmitLanguageEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;
         }
