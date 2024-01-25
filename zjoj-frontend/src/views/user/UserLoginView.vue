@@ -8,7 +8,7 @@
       :model="form"
       @submit="handleSubmit"
     >
-      <a-form-item field="userAccount" label="account">
+      <a-form-item field="userAccount" label="Account">
         <a-input
           v-model="form.userAccount"
           placeholder="please enter account"
@@ -17,7 +17,7 @@
       <a-form-item
         field="userPassword"
         tooltip="password digit no less then 8"
-        label="password"
+        label="Password"
       >
         <a-input-password
           v-model="form.userPassword"
