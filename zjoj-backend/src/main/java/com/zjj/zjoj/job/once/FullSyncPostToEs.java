@@ -4,9 +4,11 @@ import com.zjj.zjoj.esdao.PostEsDao;
 import com.zjj.zjoj.model.dto.post.PostEsDTO;
 import com.zjj.zjoj.model.entity.Post;
 import com.zjj.zjoj.service.PostService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
+
 import lombok.extern.slf4j.Slf4j;
 import cn.hutool.core.collection.CollUtil;
 import org.springframework.boot.CommandLineRunner;
