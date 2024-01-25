@@ -1,25 +1,32 @@
 package com.zjj.zjoj.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zjj.zjoj.common.ErrorCode;
+import com.zjj.zjoj.constant.CommonConstant;
 import com.zjj.zjoj.exception.BusinessException;
 import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.zjj.zjoj.model.entity.Question;
-import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.zjj.zjoj.model.entity.User;
 import com.zjj.zjoj.model.enums.QuestionSubmitLanguageEnum;
 import com.zjj.zjoj.model.enums.QuestionSubmitStatusEnum;
+import com.zjj.zjoj.model.vo.QuestionSubmitVO;
 import com.zjj.zjoj.service.QuestionService;
 import com.zjj.zjoj.service.QuestionSubmitService;
-import com.zjj.zjoj.service.QuestionSubmitService;
 import com.zjj.zjoj.mapper.QuestionSubmitMapper;
-import org.springframework.aop.framework.AopContext;
+import com.zjj.zjoj.service.UserService;
+import com.zjj.zjoj.utils.SqlUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zj
@@ -31,6 +38,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         implements QuestionSubmitService {
     @Resource
     private QuestionService questionService;
+
+    @Resource
+    private UserService userService;
 
     /**
      * question submit
@@ -71,6 +81,80 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "data insert fail");
         }
         return questionSubmit.getId();
+    }
+
+    /**
+     * Get QuestionSubmit Query Request
+     * Get query wrapper, user uses some fields to search and based on questionSubmitQueryRequest from frontent,
+     * get QueryWrapper supported by MyBatis plus
+     *
+     * @param questionSubmitQueryRequest
+     * @return
+     */
+    @Override
+    public QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest) {
+        QueryWrapper<QuestionSubmit> queryWrapper = new QueryWrapper<>();
+        if (questionSubmitQueryRequest == null) {
+            return queryWrapper;
+        }
+
+        String language = questionSubmitQueryRequest.getLanguage();
+        Integer status = questionSubmitQueryRequest.getStatus();
+        Long questionId = questionSubmitQueryRequest.getQuestionId();
+        Long userId = questionSubmitQueryRequest.getUserId();
+        String sortField = questionSubmitQueryRequest.getSortField();
+        String sortOrder = questionSubmitQueryRequest.getSortOrder();
+
+        // concat query condition
+        queryWrapper.eq(StringUtils.isNotEmpty(language), "language", language);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(questionId), "questionId", questionId);
+        queryWrapper.eq(QuestionSubmitStatusEnum.getEnumByValue(status) != null, "status", status);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+                sortField);
+
+        return queryWrapper;
+    }
+
+    /**
+     * Get single QuestionSubmitVO
+     *
+     * @param questionSubmit
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser) {
+        //QuestionSubmit -> QuestionSubmitVO
+        QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
+
+        //Desensitivation: only current login user can see
+        long userId = loginUser.getId();
+        //if current login is not user who submit the question and this user is not admin -> cannot see code
+        if (userId != questionSubmit.getUserId() && !userService.isAdmin(loginUser)){
+            questionSubmitVO.setCode(null);
+        }
+        return questionSubmitVO;
+    }
+
+    /**
+     * Get QuestionSubmitVO by Page: for loop of previous function
+     * @param questionSubmitPage
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Page<QuestionSubmitVO> getQuestionSubmitVOPage(Page<QuestionSubmit> questionSubmitPage, User loginUser) {
+        List<QuestionSubmit> questionSubmitList = questionSubmitPage.getRecords();
+        Page<QuestionSubmitVO> questionSubmitVOPage = new Page<>(questionSubmitPage.getCurrent(), questionSubmitPage.getSize(), questionSubmitPage.getTotal());
+        if (CollUtil.isEmpty(questionSubmitList)) {
+            return questionSubmitVOPage;
+        }
+        List<QuestionSubmitVO> questionSubmitVOList = questionSubmitList.stream()
+                .map(questionSubmit -> getQuestionSubmitVO(questionSubmit, loginUser))
+                .collect(Collectors.toList());
+        questionSubmitVOPage.setRecords(questionSubmitVOList);
+        return questionSubmitVOPage;
     }
 }
 

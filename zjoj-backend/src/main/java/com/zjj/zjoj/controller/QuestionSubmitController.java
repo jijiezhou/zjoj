@@ -1,11 +1,17 @@
 package com.zjj.zjoj.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zjj.zjoj.annotation.AuthCheck;
 import com.zjj.zjoj.common.BaseResponse;
 import com.zjj.zjoj.common.ErrorCode;
 import com.zjj.zjoj.common.ResultUtils;
+import com.zjj.zjoj.constant.UserConstant;
 import com.zjj.zjoj.exception.BusinessException;
 import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
+import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.vo.QuestionSubmitVO;
 import com.zjj.zjoj.service.QuestionSubmitService;
 import com.zjj.zjoj.service.UserService;
 import javax.annotation.Resource;
@@ -50,5 +56,23 @@ public class QuestionSubmitController {
         long questionId = questionSubmitAddRequest.getQuestionId();
         long result = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * Get QuestionSubmit ByPage
+     *
+     * @param questionSubmitQueryRequest
+     * @return
+     */
+    @PostMapping("/list/page")
+    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest, HttpServletRequest request) {
+        long current = questionSubmitQueryRequest.getCurrent();
+        long size = questionSubmitQueryRequest.getPageSize();
+        //Get original question info by page
+        Page<QuestionSubmit> questionSubmitPage = questionSubmitService.page(new Page<>(current, size),
+                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+        final User loginUser = userService.getLoginUser(request);
+        //Desensitization
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage, loginUser));
     }
 }

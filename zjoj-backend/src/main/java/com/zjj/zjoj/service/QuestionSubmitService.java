@@ -1,9 +1,13 @@
 package com.zjj.zjoj.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.vo.QuestionSubmitVO;
 
 /**
 * @author zj
@@ -19,4 +23,30 @@ public interface QuestionSubmitService extends IService<QuestionSubmit> {
      * @return userId who submit
      */
     long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser);
+
+    /**
+     * Get query request
+     *
+     * @param questionSubmitQueryRequest
+     * @return
+     */
+    QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionSubmitQueryRequest);
+
+    /**
+     * Get QuestionSubmitVO
+     *
+     * @param questionSubmit
+     * @param loginUSer
+     * @return
+     */
+    QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUSer);
+
+    /**
+     * Get QuestionSubmitVO by Page
+     *
+     * @param questionSubmitPage
+     * @param loginUser
+     * @return
+     */
+    Page<QuestionSubmitVO> getQuestionSubmitVOPage(Page<QuestionSubmit> questionSubmitPage, User loginUser);
 }
