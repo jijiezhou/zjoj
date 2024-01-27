@@ -17,9 +17,11 @@ import com.zjj.zjoj.model.entity.User;
 import com.zjj.zjoj.model.vo.QuestionVO;
 import com.zjj.zjoj.service.QuestionService;
 import com.zjj.zjoj.service.UserService;
+
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Question Interface
- *
+ * <p>
  * zjj
  */
 @RestController
@@ -68,12 +70,12 @@ public class QuestionController {
         }
         //add judgeCase and judgeConfig
         List<JudgeCase> judgeCases = questionAddRequest.getJudgeCase();
-        if (judgeCases != null){
+        if (judgeCases != null) {
             question.setJudgeCase(GSON.toJson(judgeCases));
         }
-        List<JudgeConfig> judgeConfigs = questionAddRequest.getJudgeConfig();
-        if (judgeConfigs != null){
-            question.setJudgeConfig(GSON.toJson(judgeConfigs));
+        JudgeConfig judgeConfig = questionAddRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
 
         questionService.validQuestion(question, true);
@@ -132,12 +134,12 @@ public class QuestionController {
         }
         //add judgeCase and judgeConfig
         List<JudgeCase> judgeCases = questionUpdateRequest.getJudgeCase();
-        if (judgeCases != null){
+        if (judgeCases != null) {
             question.setJudgeCase(GSON.toJson(judgeCases));
         }
-        List<JudgeConfig> judgeConfigs = questionUpdateRequest.getJudgeConfig();
-        if (judgeConfigs != null){
-            question.setJudgeConfig(GSON.toJson(judgeConfigs));
+        JudgeConfig judgeConfig = questionUpdateRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         // validate parameters
         questionService.validQuestion(question, false);
@@ -192,7 +194,7 @@ public class QuestionController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                       HttpServletRequest request) {
+                                                               HttpServletRequest request) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         // limit web crawling
@@ -211,7 +213,7 @@ public class QuestionController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-                                                         HttpServletRequest request) {
+                                                                 HttpServletRequest request) {
         if (questionQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -248,12 +250,12 @@ public class QuestionController {
         }
         //add judgeCase and judgeConfig
         List<JudgeCase> judgeCases = questionEditRequest.getJudgeCase();
-        if (judgeCases != null){
+        if (judgeCases != null) {
             question.setJudgeCase(GSON.toJson(judgeCases));
         }
-        List<JudgeConfig> judgeConfigs = questionEditRequest.getJudgeConfig();
-        if (judgeConfigs != null){
-            question.setJudgeConfig(GSON.toJson(judgeConfigs));
+        JudgeConfig judgeConfig = questionEditRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         // validation
         questionService.validQuestion(question, false);
