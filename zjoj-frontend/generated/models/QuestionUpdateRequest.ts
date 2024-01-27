@@ -9,7 +9,7 @@ export type QuestionUpdateRequest = {
     content?: string;
     id?: number;
     judgeCase?: Array<JudgeCase>;
-    judgeConfig?: Array<JudgeConfig>;
+    judgeConfig?: JudgeConfig;
     tags?: Array<string>;
     title?: string;
 };
