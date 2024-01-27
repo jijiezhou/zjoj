@@ -102,10 +102,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import MdEditor from "@/components/MdEditor.vue";
 import { QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+//if url include "update" -> update
+const updatePage = route.path.includes("update");
 
 let form = ref({
   title: "",
@@ -123,6 +128,53 @@ let form = ref({
       output: "",
     },
   ],
+});
+
+/**
+ * use id to get old data
+ */
+const loadData = async () => {
+  const id = route.query.id;
+  if (!id) {
+    return;
+  }
+  const res = await QuestionControllerService.getQuestionByIdUsingGet(
+    id as any
+  );
+  if (res.code === 0) {
+    form.value = res.data as any;
+    //JSON -> String
+    if (!form.value.judgeCase) {
+      form.value.judgeCase = [
+        {
+          input: "",
+          output: "",
+        },
+      ];
+    } else {
+      form.value.judgeCase = JSON.parse(form.value.judgeCase as any);
+    }
+    if (!form.value.judgeConfig) {
+      form.value.judgeConfig = {
+        timeLimit: 1000,
+        memoryLimit: 1000,
+        stackLimit: 1000,
+      };
+    } else {
+      form.value.judgeConfig = JSON.parse(form.value.judgeConfig as any);
+    }
+    if (!form.value.tags) {
+      form.value.tags = [];
+    } else {
+      form.value.tags = JSON.parse(form.value.tags as any);
+    }
+  } else {
+    message.error("Load Fail" + res.message);
+  }
+};
+
+onMounted(() => {
+  loadData();
 });
 
 const onContentChange = (value: string) => {
@@ -155,12 +207,26 @@ const handleDelete = (index: number) => {
  * submit form
  */
 const doSubmit = async () => {
-  console.log(form.value);
-  const res = await QuestionControllerService.addQuestionUsingPost(form.value);
-  if (res.code === 0) {
-    message.success("add question success");
+  //console.log(form.value);
+  //Distinguish between update and add
+  if (updatePage) {
+    const res = await QuestionControllerService.updateQuestionUsingPost(
+      form.value
+    );
+    if (res.code === 0) {
+      message.success("update question success");
+    } else {
+      message.error("update question fail, " + res.message);
+    }
   } else {
-    message.error("add question fail, " + res.message);
+    const res = await QuestionControllerService.addQuestionUsingPost(
+      form.value
+    );
+    if (res.code === 0) {
+      message.success("add question success");
+    } else {
+      message.error("add question fail, " + res.message);
+    }
   }
 };
 </script>
