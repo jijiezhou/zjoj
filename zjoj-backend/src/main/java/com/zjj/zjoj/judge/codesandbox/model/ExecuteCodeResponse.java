@@ -1,5 +1,6 @@
 package com.zjj.zjoj.judge.codesandbox.model;
 
+import com.zjj.zjoj.model.dto.questionsubmit.JudgeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +18,21 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExecuteCodeRequest {
-    private List<String> inputList;
+public class ExecuteCodeResponse {
+    private List<String> outList;
 
-    private String code;
+    /**
+     * execution message
+     */
+    private String message;
 
-    private String language;
+    /**
+     * execution status
+     */
+    private Integer status;
+
+    /**
+     * judgeInfo: message - memory - time
+     */
+    private JudgeInfo judgeInfo;
 }

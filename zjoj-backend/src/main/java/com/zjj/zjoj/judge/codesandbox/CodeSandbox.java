@@ -1,8 +1,15 @@
-package com.zjj.zjoj.judge.codesandbox;/**
+package com.zjj.zjoj.judge.codesandbox;
+
+import com.zjj.zjoj.judge.codesandbox.model.ExecuteCodeRequest;
+import com.zjj.zjoj.judge.codesandbox.model.ExecuteCodeResponse;
+
+/**
  * @Classname CodeSandbox
- * @Description TODO
+ * @Description Code Sandbox Interface
  * @Author zjj
  * @Date 1/28/24 4:07 PM
  */
-    public interface CodeSandbox {
+
+public interface CodeSandbox {
+     ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest);
 }
