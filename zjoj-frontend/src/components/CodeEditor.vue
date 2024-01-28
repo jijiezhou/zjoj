@@ -1,18 +1,22 @@
 <template>
-  <div id="code-editor" ref="codeEditorRef" style="min-height: 200px"></div>
+  <div
+    id="code-editor"
+    ref="codeEditorRef"
+    style="min-height: 400px; height: 70vh"
+  ></div>
   <!--<a-button @click="fillValue">Fill Value</a-button>-->
 </template>
 
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { onMounted, ref, toRaw } from "vue";
+import { onMounted, ref, toRaw, watch } from "vue";
 
 /**
  * Define components attributes
  */
 interface Props {
   value: string;
-  mode?: string;
+  language?: string;
   handleChange: (v: string) => void;
 }
 
@@ -22,6 +26,7 @@ interface Props {
 // eslint-disable-next-line no-undef
 const props = withDefaults(defineProps<Props>(), {
   value: () => "",
+  language: () => "java",
   handleChange: (v: string) => {
     console.log(v);
   },
@@ -31,13 +36,31 @@ const codeEditorRef = ref();
 const codeEditor = ref();
 const value = ref("hello world");
 
-const fillValue = () => {
-  if (!codeEditor.value) {
-    return;
+// const fillValue = () => {
+//   if (!codeEditor.value) {
+//     return;
+//   }
+//   //change value
+//   toRaw(codeEditor.value).setValue("New Hello World");
+// };
+
+watch(
+  () => props.language,
+  () => {
+    alert(props.language);
+    codeEditor.value = monaco.editor.create(codeEditorRef.value, {
+      value: props.value,
+      language: props.language,
+      automaticLayout: true,
+      colorDecorators: true,
+      minimap: {
+        enabled: true,
+      },
+      readOnly: false,
+      theme: "vs-dark",
+    });
   }
-  //change value
-  toRaw(codeEditor.value).setValue("New Hello World");
-};
+);
 
 onMounted(() => {
   if (!codeEditorRef.value) {
@@ -47,7 +70,7 @@ onMounted(() => {
   // Hover on each property to see its docs!
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
     value: props.value,
-    language: "java",
+    language: props.language,
     automaticLayout: true,
     colorDecorators: true,
     minimap: {

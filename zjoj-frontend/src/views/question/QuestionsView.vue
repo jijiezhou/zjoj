@@ -76,7 +76,7 @@ const dataList = ref([]);
 const searchParams = ref<QuestionQueryRequest>({
   title: "",
   tags: [],
-  pageSize: 1,
+  pageSize: 10,
   current: 1,
 });
 const total = ref(0);
