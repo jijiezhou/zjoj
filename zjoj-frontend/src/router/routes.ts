@@ -8,6 +8,7 @@ import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
+import QuestionsView from "@/views/question/QuestionsView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -31,42 +32,48 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/questions",
+    name: "ViewQuestion",
+    component: QuestionsView,
+  },
+  {
     path: "/add/question",
     name: "AddQuestion",
     component: AddQuestionView,
-    // meta: {
-    //   access: ACCESS_ENUM.ADMIN,
-    // },
+    meta: {
+      access: ACCESS_ENUM.USER,
+    },
   },
   {
     path: "/update/question",
     name: "UpdateQuestion",
     component: AddQuestionView,
-    // meta: {
-    //   access: ACCESS_ENUM.ADMIN,
-    // },
+    meta: {
+      access: ACCESS_ENUM.USER,
+      hideInMenu: true,
+    },
   },
   {
     path: "/manage/question",
     name: "ManageQuestion",
     component: ManageQuestionView,
-    // meta: {
-    //   access: ACCESS_ENUM.ADMIN,
-    // },
+    meta: {
+      access: ACCESS_ENUM.ADMIN,
+    },
   },
   {
     path: "/",
-    name: "Question",
-    component: HomeView,
+    name: "MainPage",
+    component: QuestionsView,
   },
-  {
-    path: "/hide",
-    name: "Hide",
-    component: HomeView,
-    meta: {
-      hideInMenu: true,
-    },
-  },
+  // {
+  //   path: "/hide",
+  //   name: "Hide",
+  //   component: HomeView,
+  //   meta: {
+  //     hideInMenu: true,
+  //   },
+  // },
   {
     path: "/admin",
     name: "Admin",
@@ -79,14 +86,17 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/noAuth",
     name: "NoAuth",
     component: NoAuthView,
+    meta: {
+      hideInMenu: true,
+    },
   },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  },
+  // {
+  //   path: "/about",
+  //   name: "About",
+  //   // route level code-splitting
+  //   // this generates a separate chunk (about.[hash].js) for this route
+  //   // which is lazy-loaded when the route is visited.
+  //   component: () =>
+  //     import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+  // },
 ];

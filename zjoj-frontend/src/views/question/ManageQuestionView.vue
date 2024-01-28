@@ -8,9 +8,10 @@
       :pagination="{
         showTotal: true,
         pageSize: searchParams.pageSize,
-        current: searchParams.pageNum,
+        current: searchParams.current,
         total,
       }"
+      @page-change="onPageChange"
     >
       <template #optional="{ record }">
         <a-space>
@@ -23,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { Question, QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
@@ -34,7 +35,7 @@ const tableRef = ref();
 const dataList = ref([]);
 const searchParams = ref({
   pageSize: 10,
-  pageNum: 1,
+  current: 1,
 });
 const total = ref(0);
 
@@ -130,6 +131,20 @@ const doUpdate = (question: Question) => {
     },
   });
 };
+
+const onPageChange = (page: number) => {
+  searchParams.value = {
+    ...searchParams.value,
+    current: page,
+  };
+};
+
+/**
+ * listen to the change of searchParams, change trigger loadData()
+ */
+watchEffect(() => {
+  loadData();
+});
 </script>
 
 <style scoped>
