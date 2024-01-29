@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zjj.zjoj.common.ErrorCode;
 import com.zjj.zjoj.constant.CommonConstant;
 import com.zjj.zjoj.exception.BusinessException;
+import com.zjj.zjoj.judge.JudgeService;
 import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.zjj.zjoj.model.entity.Question;
@@ -22,10 +23,12 @@ import com.zjj.zjoj.service.UserService;
 import com.zjj.zjoj.utils.SqlUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +44,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Resource
     private UserService userService;
+
+    @Resource
+    @Lazy
+    private JudgeService judgeService;
 
     /**
      * question submit
@@ -80,7 +87,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (!save) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "data insert fail");
         }
-        return questionSubmit.getId();
+        Long questionSubmitId = questionSubmit.getId();
+        // judgeService
+        CompletableFuture.runAsync(() -> {
+            judgeService.doJudge(questionSubmitId);
+        });
+        return questionSubmitId;
+
     }
 
     /**
@@ -131,7 +144,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         //Desensitivation: only current login user can see
         long userId = loginUser.getId();
         //if current login is not user who submit the question and this user is not admin -> cannot see code
-        if (userId != questionSubmit.getUserId() && !userService.isAdmin(loginUser)){
+        if (userId != questionSubmit.getUserId() && !userService.isAdmin(loginUser)) {
             questionSubmitVO.setCode(null);
         }
         return questionSubmitVO;
@@ -139,6 +152,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     /**
      * Get QuestionSubmitVO by Page: for loop of previous function
+     *
      * @param questionSubmitPage
      * @param loginUser
      * @return

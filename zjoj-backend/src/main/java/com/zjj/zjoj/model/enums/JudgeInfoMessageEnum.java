@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @Date 1/24/24 10:33PM
  */
 public enum JudgeInfoMessageEnum {
-    Accepted("accepted", "Accepted"),
+    ACCEPTED("accepted", "Accepted"),
     WRONG_ANSWER("Wrong Answer", "Wrong Answer"),
     COMPILE_ERROR("Compile Error", "Compile Error"),
     MEMORY_LIMIT_EXCEEDED("Memory Limit Exceeded", "Memory Limit Exceeded"),
