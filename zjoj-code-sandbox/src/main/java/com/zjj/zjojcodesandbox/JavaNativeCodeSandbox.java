@@ -4,6 +4,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.dfa.FoundWord;
+import cn.hutool.dfa.WordTree;
 import com.zjj.zjojcodesandbox.model.ExecuteCodeRequest;
 import com.zjj.zjojcodesandbox.model.ExecuteCodeResponse;
 import com.zjj.zjojcodesandbox.model.ExecuteMessage;
@@ -27,12 +29,23 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
 
     private static final String GLOBAL_JAVA_CLASS_NAME = "Main.java";
 
+    private static final long TIME_OUT = 5000L;
+
+    private static final List<String> blackList = Arrays.asList("Files", "exec");
+
+    private static final WordTree WORD_TREE = new WordTree();
+
+    static {
+        //check if code contains words in blackList
+        WORD_TREE.addWords(blackList);
+    }
+
     public static void main(String[] args) {
         CodeSandbox javaNativeCodeSandbox = new JavaNativeCodeSandbox();
         ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
         executeCodeRequest.setInputList(Arrays.asList("1 2", "3 4"));
         //String code = ResourceUtil.readStr("testCode/simpleComputeArgs/Main.java", StandardCharsets.UTF_8);
-        String code = ResourceUtil.readStr("testCode/unsafe/SleepError.java", StandardCharsets.UTF_8);
+        String code = ResourceUtil.readStr("testCode/unsafe/ReadFileError.java", StandardCharsets.UTF_8);
         executeCodeRequest.setCode(code);
         executeCodeRequest.setLanguage("java");
 
@@ -45,6 +58,13 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         List<String> inputList = executeCodeRequest.getInputList();
         String code = executeCodeRequest.getCode();
         String language = executeCodeRequest.getLanguage();
+
+        //check if code contains words in blackList
+        FoundWord foundWord = WORD_TREE.matchWord(code);
+        if (foundWord != null) {
+            System.out.println("include words from blackList: " + foundWord.getFoundWord());
+            return null;
+        }
 
         String userDir = System.getProperty("user.dir");
         String globalCodePathName = userDir + File.separator + GLOBAL_CODE_DIR_NAME;
@@ -72,9 +92,19 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         //3) execute code, get output
         List<ExecuteMessage> executeMessageList = new ArrayList<>();
         for (String inputArgs : inputList) {
-            String runCmd = String.format("java -Dfile.encoding=UTF-8 -cp %s Main %s", userCodeParentPath, inputArgs);
+            String runCmd = String.format("java -Xmx256m -Dfile.encoding=UTF-8 -cp %s Main %s", userCodeParentPath, inputArgs);
             try {
                 Process runProcess = Runtime.getRuntime().exec(runCmd);
+//                //1. Control time Exceeded
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(TIME_OUT);
+                        System.out.println("time out, destroy!");
+                        runProcess.destroy();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
                 ExecuteMessage executeMessage = ProcessUtils.runProcessAndGetMessage(runProcess, "runtime");
                 //ExecuteMessage executeMessage = ProcessUtils.runInteractProcessAndGetMessage(runProcess, "runtime", inputArgs);
                 executeMessageList.add(executeMessage);
@@ -89,9 +119,9 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         List<String> outputList = new ArrayList<>();
         //to check if run out of time
         long maxTime = 0;
-        for (ExecuteMessage executeMessage: executeMessageList){
+        for (ExecuteMessage executeMessage : executeMessageList) {
             String errorMessage = executeMessage.getErrorMessage();
-            if (StrUtil.isNotBlank(errorMessage)){
+            if (StrUtil.isNotBlank(errorMessage)) {
                 executeCodeResponse.setMessage(errorMessage);
                 //status fail: user code fail
                 executeCodeResponse.setStatus(3);
@@ -99,12 +129,12 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
             }
             outputList.add(executeMessage.getMessage());
             Long time = executeMessage.getTime();
-            if (time != null){
+            if (time != null) {
                 maxTime = Math.max(maxTime, time);
             }
         }
         //execution success
-        if (outputList.size() == executeMessageList.size()){
+        if (outputList.size() == executeMessageList.size()) {
             executeCodeResponse.setStatus(1);
         }
         executeCodeResponse.setOutList(outputList);
@@ -116,14 +146,14 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         executeCodeResponse.setJudgeInfo(judgeInfo);
 
         //5) Clean Files
-        if (userCodeFile.getParentFile() != null){
+        if (userCodeFile.getParentFile() != null) {
             boolean del = FileUtil.del(userCodePath);
             System.out.println("delete file " + (del ? "success" : "fail"));
         }
         return executeCodeResponse;
     }
 
-    private ExecuteCodeResponse getErrorResponse(Throwable e){
+    private ExecuteCodeResponse getErrorResponse(Throwable e) {
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
         executeCodeResponse.setOutList(new ArrayList<>());
         executeCodeResponse.setMessage(e.getMessage());
