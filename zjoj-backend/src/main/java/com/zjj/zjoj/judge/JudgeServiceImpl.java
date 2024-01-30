@@ -10,7 +10,7 @@ import com.zjj.zjoj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.zjj.zjoj.judge.codesandbox.model.ExecuteCodeResponse;
 import com.zjj.zjoj.judge.strategy.JudgeContext;
 import com.zjj.zjoj.model.dto.question.JudgeCase;
-import com.zjj.zjoj.model.dto.questionsubmit.JudgeInfo;
+import com.zjj.zjoj.judge.codesandbox.model.JudgeInfo;
 import com.zjj.zjoj.model.entity.Question;
 import com.zjj.zjoj.model.entity.QuestionSubmit;
 

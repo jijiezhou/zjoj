@@ -1,6 +1,6 @@
 package com.zjj.zjoj.judge.strategy;
 
-import com.zjj.zjoj.model.dto.questionsubmit.JudgeInfo;
+import com.zjj.zjoj.judge.codesandbox.model.JudgeInfo;
 
 /**
  * @Classname JudgeStrategy

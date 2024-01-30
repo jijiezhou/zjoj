@@ -1,7 +1,7 @@
 package com.zjj.zjoj.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.zjj.zjoj.model.dto.questionsubmit.JudgeInfo;
+import com.zjj.zjoj.judge.codesandbox.model.JudgeInfo;
 import com.zjj.zjoj.model.entity.QuestionSubmit;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
