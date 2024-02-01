@@ -4,15 +4,11 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.dfa.FoundWord;
 import cn.hutool.dfa.WordTree;
 import com.zjj.zjojcodesandbox.model.ExecuteCodeRequest;
 import com.zjj.zjojcodesandbox.model.ExecuteCodeResponse;
 import com.zjj.zjojcodesandbox.model.ExecuteMessage;
 import com.zjj.zjojcodesandbox.model.JudgeInfo;
-import com.zjj.zjojcodesandbox.security.DefaultSecurityManager;
-import com.zjj.zjojcodesandbox.security.DenySecurityManager;
-import com.zjj.zjojcodesandbox.security.MySecurityManager;
 import com.zjj.zjojcodesandbox.utils.ProcessUtils;
 
 import java.io.File;
@@ -22,12 +18,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @Classname JavaNativeCodeSandbox
+ * @Classname JavaCodeSandboxTemplate
  * @Description TODO
  * @Author zjj
- * @Date 1/29/24 2:46PM
+ * @Date 2/1/24 4:42 PM
  */
-public class JavaNativeCodeSandbox implements CodeSandbox {
+public abstract class JavaCodeSandboxTemplate implements CodeSandbox {
     private static final String GLOBAL_CODE_DIR_NAME = "tmpCode";
 
     private static final String GLOBAL_JAVA_CLASS_NAME = "Main.java";
@@ -38,43 +34,13 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
 
     private static final long TIME_OUT = 5000L;
 
-    private static final List<String> blackList = Arrays.asList("Files", "exec");
-
-    private static final WordTree WORD_TREE = new WordTree();
-
-    static {
-        //check if code contains words in blackList
-        WORD_TREE.addWords(blackList);
-    }
-
-    public static void main(String[] args) {
-        CodeSandbox javaNativeCodeSandbox = new JavaNativeCodeSandbox();
-        ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
-        executeCodeRequest.setInputList(Arrays.asList("1 2", "3 4"));
-        //String code = ResourceUtil.readStr("testCode/simpleComputeArgs/Main.java", StandardCharsets.UTF_8);
-        String code = ResourceUtil.readStr("testCode/unsafe/RunFileError.java", StandardCharsets.UTF_8);
-        executeCodeRequest.setCode(code);
-        executeCodeRequest.setLanguage("java");
-
-        ExecuteCodeResponse executeCodeResponse = javaNativeCodeSandbox.executeCode(executeCodeRequest);
-        System.out.println(executeCodeResponse);
-    }
-
-    @Override
-    public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
-        //System.setSecurityManager(new MySecurityManager());
-
-        List<String> inputList = executeCodeRequest.getInputList();
-        String code = executeCodeRequest.getCode();
-        String language = executeCodeRequest.getLanguage();
-
-        //check if code contains words in blackList
-//        FoundWord foundWord = WORD_TREE.matchWord(code);
-//        if (foundWord != null) {
-//            System.out.println("include words from blackList: " + foundWord.getFoundWord());
-//            return null;
-//        }
-
+    /**
+     * Step1: User code to File
+     *
+     * @return
+     * @Param user code
+     */
+    public File saveCodeToFile(String code) {
         String userDir = System.getProperty("user.dir");
         String globalCodePathName = userDir + File.separator + GLOBAL_CODE_DIR_NAME;
         //1) usercode -> file
@@ -87,16 +53,48 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         String userCodeParentPath = globalCodePathName + File.separator + UUID.randomUUID();
         String userCodePath = userCodeParentPath + File.separator + GLOBAL_JAVA_CLASS_NAME;
         File userCodeFile = FileUtil.writeString(code, userCodePath, StandardCharsets.UTF_8);
+        return userCodeFile;
+    }
 
+    /**
+     * Compile java file -> class file
+     *
+     * @param userCodeFile
+     * @return
+     */
+    public ExecuteMessage compileFile(File userCodeFile) {
         //2) compile file -> class file
         String compileCmd = String.format("javac -encoding utf-8 %s", userCodeFile.getAbsolutePath());
         try {
             Process compileProcess = Runtime.getRuntime().exec(compileCmd);
             ExecuteMessage executeMessage = ProcessUtils.runProcessAndGetMessage(compileProcess, "compile");
             System.out.println(executeMessage);
+            if (executeMessage.getExitValue() != 0) {
+                throw new RuntimeException("compile error");
+            }
+            return executeMessage;
         } catch (Exception e) {
-            return getErrorResponse(e);
+            throw new RuntimeException(e);
         }
+    }
+
+    public List<ExecuteMessage> runFile() {
+    }
+
+    @Override
+    public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
+        //System.setSecurityManager(new MySecurityManager());
+
+        List<String> inputList = executeCodeRequest.getInputList();
+        String code = executeCodeRequest.getCode();
+        String language = executeCodeRequest.getLanguage();
+
+        //1) usercode -> file
+        File userCodeFile = saveCodeToFile(code);
+
+        //2) compile file -> class file
+        ExecuteMessage compileFileExecuteMessage = compileFile(userCodeFile);
+        System.out.println(compileFileExecuteMessage);
 
         //3) execute code, get output
         List<ExecuteMessage> executeMessageList = new ArrayList<>();

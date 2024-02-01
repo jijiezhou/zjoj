@@ -1,0 +1,25 @@
+{
+  "defaultAction": "SCMP_ACT_ALLOW",
+  "syscalls": [
+    {
+      "names": [
+        "epoll_ctl",
+        "epoll_pwait",
+        "clone",
+        "fork",
+        "vfork",
+        "execve"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    },
+    {
+      "names": [
+        "chmod",
+        "fchmod",
+        "fchmodat"
+      ],
+      "action": "SCMP_ACT_ERRNO",
+      "errnoRet": 1
+    }
+  ]
+}

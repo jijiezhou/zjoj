@@ -10,4 +10,8 @@ class ZjojCodeSandboxApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void test() {
+        System.out.println(System.getProperty("java.version"));
+    }
 }
