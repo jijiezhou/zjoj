@@ -1,7 +1,10 @@
 package com.zjj.zjojcodesandbox;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.*;
@@ -12,7 +15,8 @@ import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.zjj.zjojcodesandbox.model.ExecuteCodeRequest;
 import com.zjj.zjojcodesandbox.model.ExecuteCodeResponse;
 import com.zjj.zjojcodesandbox.model.ExecuteMessage;
-import org.springframework.stereotype.Component;
+import com.zjj.zjojcodesandbox.model.JudgeInfo;
+import com.zjj.zjojcodesandbox.utils.ProcessUtils;
 import org.springframework.util.StopWatch;
 
 import java.io.Closeable;
@@ -26,22 +30,25 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @Classname JavaDockerCodeSandbox
- * @Description Extends Template using Docker
+ * @Description TODO
  * @Author zjj
  * @Date 1/31/24 10:01 PM
  */
-@Component
-public class JavaDockerCodeSandbox extends JavaCodeSandboxTemplate {
+public class JavaDockerCodeSandboxOld implements CodeSandbox {
     private static final String GLOBAL_CODE_DIR_NAME = "tmpCode";
 
     private static final String GLOBAL_JAVA_CLASS_NAME = "Main.java";
+
+    private static final String SECURITY_MANAGER_PATH = "/Users/zj/projects/zjoj/zjoj-code-sandbox/src/main/resources/security";
+
+    private static final String SECURITY_MANAGER_CLASS_NAME = "MySecurityManager";
 
     private static final long TIME_OUT = 5000L;
 
     private static final Boolean FIRST_INIT = true;
 
     public static void main(String[] args) {
-        CodeSandbox javaDockerCodeSandbox = new JavaDockerCodeSandbox();
+        CodeSandbox javaDockerCodeSandbox = new JavaDockerCodeSandboxOld();
         ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
         executeCodeRequest.setInputList(Arrays.asList("1 2", "3 4"));
         String code = ResourceUtil.readStr("testCode/simpleComputeArgs/Main.java", StandardCharsets.UTF_8);
@@ -53,17 +60,41 @@ public class JavaDockerCodeSandbox extends JavaCodeSandboxTemplate {
         System.out.println(executeCodeResponse);
     }
 
-    /**
-     * Step 3: Create Container + Execute file and get the output list
-     * @param userCodeFile
-     * @param inputList
-     * @return
-     */
     @Override
-    public List<ExecuteMessage> runFile(File userCodeFile, List<String> inputList) {
+    public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
+        //System.setSecurityManager(new MySecurityManager());
+
+        List<String> inputList = executeCodeRequest.getInputList();
+        String code = executeCodeRequest.getCode();
+        String language = executeCodeRequest.getLanguage();
+
+        //1) usercode -> file
+        String userDir = System.getProperty("user.dir");
+        String globalCodePathName = userDir + File.separator + GLOBAL_CODE_DIR_NAME;
+
+        //1.1) check if global file directory exist
+        if (!FileUtil.exist(globalCodePathName)) {
+            FileUtil.mkdir(globalCodePathName);
+        }
+
+        //1.2)separate user code
+        String userCodeParentPath = globalCodePathName + File.separator + UUID.randomUUID();
+        String userCodePath = userCodeParentPath + File.separator + GLOBAL_JAVA_CLASS_NAME;
+        File userCodeFile = FileUtil.writeString(code, userCodePath, StandardCharsets.UTF_8);
+
+        //2) compile file -> class file
+        String compileCmd = String.format("javac -source 1.8 -target 1.8 -encoding utf-8 %s", userCodeFile.getAbsolutePath());
+        System.out.println(System.getProperty("java.version"));
+        try {
+            Process compileProcess = Runtime.getRuntime().exec(compileCmd);
+            ExecuteMessage executeMessage = ProcessUtils.runProcessAndGetMessage(compileProcess, "compile");
+            System.out.println(executeMessage);
+        } catch (Exception e) {
+            return getErrorResponse(e);
+        }
+
         //3. Create Docker Container
         //3.1 Create Image; Default Docker Client
-        String userCodeParentPath = userCodeFile.getParentFile().getAbsolutePath();
         DockerClient dockerClient = DockerClientBuilder.getInstance().build();
 
         //Pull Image
@@ -203,6 +234,54 @@ public class JavaDockerCodeSandbox extends JavaCodeSandboxTemplate {
             executeMessage.setMemory(maxMemory[0]);
             executeMessageList.add(executeMessage);
         }
-        return executeMessageList;
+
+        //4)Collect and arrange output
+        ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        List<String> outputList = new ArrayList<>();
+        //to check if run out of time
+        long maxTime = 0;
+        for (ExecuteMessage executeMessage : executeMessageList) {
+            String errorMessage = executeMessage.getErrorMessage();
+            if (StrUtil.isNotBlank(errorMessage)) {
+                executeCodeResponse.setMessage(errorMessage);
+                //status fail: user code fail
+                executeCodeResponse.setStatus(3);
+                break;
+            }
+            outputList.add(executeMessage.getMessage());
+            Long time = executeMessage.getTime();
+            if (time != null) {
+                maxTime = Math.max(maxTime, time);
+            }
+        }
+        //execution success
+        if (outputList.size() == executeMessageList.size()) {
+            executeCodeResponse.setStatus(1);
+        }
+        executeCodeResponse.setOutList(outputList);
+
+        JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setTime(maxTime);
+        //judgeInfo.setMemory();
+
+        executeCodeResponse.setJudgeInfo(judgeInfo);
+
+        //5) Clean Files
+        if (userCodeFile.getParentFile() != null) {
+            boolean del = FileUtil.del(userCodePath);
+            System.out.println("delete file " + (del ? "success" : "fail"));
+        }
+
+        return executeCodeResponse;
+    }
+
+    private ExecuteCodeResponse getErrorResponse(Throwable e) {
+        ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        executeCodeResponse.setOutList(new ArrayList<>());
+        executeCodeResponse.setMessage(e.getMessage());
+        //error in sandbox(compile error)
+        executeCodeResponse.setStatus(2);
+        executeCodeResponse.setJudgeInfo(new JudgeInfo());
+        return executeCodeResponse;
     }
 }
