@@ -16,12 +16,17 @@ import org.apache.commons.lang3.StringUtils;
  * @Date 1/28/24 4:23 PM
  */
 public class RemoteCodeSandbox implements CodeSandbox {
+    private static final String AUTH_REQUEST_HEADER = "auth";
+
+    private static final String AUTH_REQUEST_SECRET = "secretKey";
+
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("Remote CodeSandbox Start!");
         String url = "http://localhost:8090/executeCode";
         String json = JSONUtil.toJsonStr(executeCodeRequest);
         String responseStr = HttpUtil.createPost(url)
+                .header(AUTH_REQUEST_HEADER, AUTH_REQUEST_SECRET)
                 .body(json)
                 .execute()
                 .body();

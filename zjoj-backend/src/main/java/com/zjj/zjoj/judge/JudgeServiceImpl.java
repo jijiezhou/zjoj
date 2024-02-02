@@ -56,10 +56,12 @@ public class JudgeServiceImpl implements JudgeService {
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "question not exist");
         }
+
         //2) Only do the judge service when questionSubmit status is “WAITING”
         if (!questionSubmit.getStatus().equals(QuestionSubmitStatusEnum.WAITING.getValue())) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "question is judging now");
         }
+
         //3) Change the questionSubmit status to “RUNNING” to prevent multiple execution
         QuestionSubmit questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);

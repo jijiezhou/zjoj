@@ -12,10 +12,15 @@ import com.zjj.zjoj.constant.UserConstant;
 import com.zjj.zjoj.exception.BusinessException;
 import com.zjj.zjoj.exception.ThrowUtils;
 import com.zjj.zjoj.model.dto.question.*;
+import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.zjj.zjoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.zjj.zjoj.model.entity.Question;
+import com.zjj.zjoj.model.entity.QuestionSubmit;
 import com.zjj.zjoj.model.entity.User;
+import com.zjj.zjoj.model.vo.QuestionSubmitVO;
 import com.zjj.zjoj.model.vo.QuestionVO;
 import com.zjj.zjoj.service.QuestionService;
+import com.zjj.zjoj.service.QuestionSubmitService;
 import com.zjj.zjoj.service.UserService;
 
 import java.util.List;
@@ -45,6 +50,9 @@ public class QuestionController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private QuestionSubmitService questionSubmitService;
 
     private final static Gson GSON = new Gson();
 
@@ -293,6 +301,44 @@ public class QuestionController {
         }
         boolean result = questionService.updateById(question);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * Submit Question
+     *
+     * @param questionSubmitAddRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/question_submit/do")
+    public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
+                                               HttpServletRequest request) {
+        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // submit question after login
+        final User loginUser = userService.getLoginUser(request);
+        long questionId = questionSubmitAddRequest.getQuestionId();
+        long result = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * Get QuestionSubmit ByPage
+     *
+     * @param questionSubmitQueryRequest
+     * @return
+     */
+    @PostMapping("/question_submit/list/page")
+    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest, HttpServletRequest request) {
+        long current = questionSubmitQueryRequest.getCurrent();
+        long size = questionSubmitQueryRequest.getPageSize();
+        //Get original question info by page
+        Page<QuestionSubmit> questionSubmitPage = questionSubmitService.page(new Page<>(current, size),
+                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+        final User loginUser = userService.getLoginUser(request);
+        //Desensitization
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage, loginUser));
     }
 
 }
