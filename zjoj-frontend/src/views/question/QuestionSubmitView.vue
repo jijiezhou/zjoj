@@ -1,21 +1,26 @@
 <template>
-  <div id="QuestionsView">
+  <div id="QuestionSubmitView">
     <h2>Questions View</h2>
     <a-form :model="searchParams" layout="inline" style="min-width: 240px">
-      <a-form-item field="title" label="Title">
+      <a-form-item field="questionId" label="questionId">
         <a-input
-          v-model="searchParams.title"
-          placeholder="please enter question title"
+          v-model="searchParams.questionId"
+          placeholder="please enter questionId"
         />
       </a-form-item>
-      <a-form-item field="tags" label="Tags" style="min-width: 240px">
-        <a-input-tag
-          v-model="searchParams.tags"
-          placeholder="please enter question tags"
-        />
+      <a-form-item field="language" label="Language" style="min-width: 240px">
+        <a-select
+          v-model="searchParams.language"
+          :style="{ width: '320px' }"
+          placeholder="Please select language"
+        >
+          <a-option>java</a-option>
+          <a-option>cpp</a-option>
+          <a-option>go</a-option>
+        </a-select>
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" @click="doSubmit">Submit</a-button>
+        <a-button type="primary" @click="doSubmit">Search</a-button>
       </a-form-item>
     </a-form>
     <a-divider size="0" />
@@ -31,28 +36,11 @@
       }"
       @page-change="onPageChange"
     >
-      <template #tags="{ record }">
-        <a-space wrap>
-          <a-tag v-for="(tag, index) of record.tags" :key="index" color="green"
-            >{{ tag }}
-          </a-tag>
-        </a-space>
-      </template>
-      <template #acceptedRate="{ record }">
-        {{
-          `${record.submitNum ? record.acceptedNum / record.submitNum : "0"}%
-        (${record.acceptedNum} / ${record.submitNum})`
-        }}
+      <template #judgeInfo="{ record }">
+        {{ JSON.stringify(record.judgeInfo) }}
       </template>
       <template #createTime="{ record }">
         {{ moment(record.createTime).format("YYYY-MM-DD") }}
-      </template>
-      <template #optional="{ record }">
-        <a-space>
-          <a-button type="primary" @click="doQuestionPage(record)"
-            >Start
-          </a-button>
-        </a-space>
       </template>
     </a-table>
   </div>
@@ -63,7 +51,7 @@ import { onMounted, ref, watchEffect } from "vue";
 import {
   Question,
   QuestionControllerService,
-  QuestionQueryRequest,
+  QuestionSubmitQueryRequest,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
@@ -73,17 +61,21 @@ const show = ref(true);
 
 const tableRef = ref();
 const dataList = ref([]);
-const searchParams = ref<QuestionQueryRequest>({
-  title: "",
-  tags: [],
+const searchParams = ref<QuestionSubmitQueryRequest>({
+  questionId: undefined,
+  language: undefined,
   pageSize: 10,
   current: 1,
 });
 const total = ref(0);
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listQuestionVoByPageUsingPost(
-    searchParams.value
+  const res = await QuestionControllerService.listQuestionSubmitByPageUsingPost(
+    {
+      ...searchParams.value,
+      sortField: "createTime",
+      sortOrder: "descend",
+    }
   );
   if (res.code === 0) {
     dataList.value = res.data.records;
@@ -106,26 +98,28 @@ const columns = [
     dataIndex: "id",
   },
   {
-    title: "title",
-    dataIndex: "title",
+    title: "language",
+    dataIndex: "language",
   },
-
   {
-    title: "tags",
-    slotName: "tags",
+    title: "judgeInfo",
+    slotName: "judgeInfo",
   },
-
   {
-    title: "ratio",
-    slotName: "acceptedRate",
+    title: "status",
+    dataIndex: "status",
+  },
+  {
+    title: "questionId",
+    dataIndex: "questionId",
+  },
+  {
+    title: "userId",
+    dataIndex: "userId",
   },
   {
     title: "createTime",
     slotName: "createTime",
-  },
-  {
-    title: "Operation",
-    slotName: "optional",
   },
 ];
 
@@ -167,7 +161,7 @@ const doSubmit = () => {
 </script>
 
 <style scoped>
-#QuestionsView {
+#QuestionSubmitView {
   max-width: 1280px;
   margin: 0 auto;
 }
