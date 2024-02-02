@@ -30,7 +30,13 @@ class CodeSandboxTest {
     @Test
     void executeCode() {
         CodeSandbox codeSandbox = new RemoteCodeSandbox();
-        String code = "int main() { }";
+        String code = "public class Main {\n" +
+                "    public static void main(String[] args){\n" +
+                "        int a = Integer.parseInt(args[0]);\n" +
+                "        int b = Integer.parseInt(args[1]);\n" +
+                "        System.out.println(\"output: \" + (a + b));\n" +
+                "    }\n" +
+                "}";
         String language = QuestionSubmitLanguageEnum.JAVA.getValue();
         List<String> inputList = Arrays.asList("1 2", "3 4");
         ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()
@@ -62,14 +68,20 @@ class CodeSandboxTest {
     void executeCodeByProxy() {
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
         codeSandbox = new CodeSandboxProxy(codeSandbox);
-        String code = "int main(){}";
+        String code = "public class Main {\n" +
+                "    public static void main(String[] args){\n" +
+                "        int a = Integer.parseInt(args[0]);\n" +
+                "        int b = Integer.parseInt(args[1]);\n" +
+                "        System.out.println(\"output: \" + (a + b));\n" +
+                "    }\n" +
+                "}";
         List<String> inputList = Arrays.asList("1 2", "3 4");
         String language = QuestionSubmitLanguageEnum.JAVA.getValue();
-        ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder().
-                code(code).
-                inputList(inputList).
-                language(language).
-                build();
+        ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()
+                .code(code)
+                .inputList(inputList)
+                .language(language)
+                .build();
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
         Assertions.assertNotNull(executeCodeResponse);
     }
