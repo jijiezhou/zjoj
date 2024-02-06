@@ -3,7 +3,6 @@ package com.zjj.zjoj;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -12,8 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author zjj
  */
-// todo 如需开启 Redis，须移除 exclude 中的内容
-@SpringBootApplication(exclude = {RedisAutoConfiguration.class})
+// todo if want to open Redis，remove contents in exclude
+@SpringBootApplication
 @MapperScan("com.zjj.zjoj.mapper")
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
