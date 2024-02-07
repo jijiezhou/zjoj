@@ -3,7 +3,7 @@
 # @from <a href="https://yupi.icu">编程导航知识星球</a>
 spring:
   application:
-    name: zjoj-backend-user-service
+    name: zjoj-backend-question-service
   # 默认 dev 环境
   profiles:
     active: dev
@@ -35,7 +35,7 @@ spring:
       max-file-size: 10MB
 server:
   address: 0.0.0.0
-  port: 8102
+  port: 8103
   servlet:
     context-path: /api
     # cookie 30 天过期
