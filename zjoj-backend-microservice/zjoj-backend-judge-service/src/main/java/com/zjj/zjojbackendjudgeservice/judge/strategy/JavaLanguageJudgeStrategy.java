@@ -1,0 +1,78 @@
+package com.zjj.zjojbackendjudgeservice.judge.strategy;
+
+import cn.hutool.json.JSONUtil;
+import com.zjj.zjojbackendmodel.model.codesandbox.JudgeInfo;
+import com.zjj.zjojbackendmodel.model.dto.question.JudgeCase;
+import com.zjj.zjojbackendmodel.model.dto.question.JudgeConfig;
+import com.zjj.zjojbackendmodel.model.entity.Question;
+import com.zjj.zjojbackendmodel.model.enums.JudgeInfoMessageEnum;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * @Classname JavaLanguageJudgeStrategy
+ * @Description Java time limit have 10s more
+ * @Author zjj
+ * @Date 1/28/24 8:05PM
+ */
+public class JavaLanguageJudgeStrategy implements JudgeStrategy {
+    /**
+     * doJudge Process
+     *
+     * @param judgeContext
+     * @return
+     */
+    @Override
+    public JudgeInfo doJudge(JudgeContext judgeContext) {
+        JudgeInfo judgeInfo = judgeContext.getJudgeInfo();
+        Long memory = Optional.ofNullable(judgeInfo.getMemory()).orElse(0L);
+        Long time = Optional.ofNullable(judgeInfo.getTime()).orElse(0L);
+        List<String> inputList = judgeContext.getInputList();
+        List<String> outputList = judgeContext.getOutputList();
+        Question question = judgeContext.getQuestion();
+        List<JudgeCase> judgeCaseList = judgeContext.getJudgeCaseList();
+        JudgeInfoMessageEnum judgeInfoMessageEnum = JudgeInfoMessageEnum.ACCEPTED;
+        JudgeInfo judgeInfoResponse = new JudgeInfo();
+        judgeInfoResponse.setMemory(memory);
+        judgeInfoResponse.setTime(time);
+
+        //5) Set judge question message and status based on result
+        //5.1 OutputList from sandbox length == expected judgeCase output length
+        if (outputList.size() != inputList.size()) {
+            judgeInfoMessageEnum = JudgeInfoMessageEnum.WRONG_ANSWER;
+            judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
+            return judgeInfoResponse;
+        }
+        //5.2 Loop through each element of outputList, compare with expected judgeCase
+        for (int i = 0; i < judgeCaseList.size(); i++) {
+            JudgeCase judgeCase = judgeCaseList.get(i);
+            if (!judgeCase.getOutput().equals(outputList.get(i))) {
+                judgeInfoMessageEnum = JudgeInfoMessageEnum.WRONG_ANSWER;
+                judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
+                return judgeInfoResponse;
+            }
+        }
+        //5.3 If JudgeConfig is in limited
+        String judgeConfigStr = question.getJudgeConfig();
+        JudgeConfig judgeConfig = JSONUtil.toBean(judgeConfigStr, JudgeConfig.class);
+        Long needMemoryLimit = judgeConfig.getMemoryLimit();
+        Long needTimeLimit = judgeConfig.getTimeLimit();
+        if (memory > needMemoryLimit) {
+            judgeInfoMessageEnum = JudgeInfoMessageEnum.MEMORY_LIMIT_EXCEEDED;
+            judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
+            return judgeInfoResponse;
+        }
+
+        //java program need 10 more seconds
+        long JAVA_PROGRAM_TIME_COST = 10000L;
+        if ((time - JAVA_PROGRAM_TIME_COST) > needTimeLimit) {
+            judgeInfoMessageEnum = JudgeInfoMessageEnum.TIME_LIMIT_EXCEEDED;
+            judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
+            return judgeInfoResponse;
+        }
+
+        judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
+        return judgeInfoResponse;
+    }
+}
