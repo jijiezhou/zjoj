@@ -3,7 +3,7 @@ package com.zjj.zjojbackendjudgeservice.judge;
 import com.zjj.zjojbackendmodel.model.entity.QuestionSubmit;
 
 /**
- * @Classname JudgeService
+ * @Classname JudgeFeignClient
  * @Description TODO
  * @Author zjj
  * @Date 1/28/24 7:05 PM

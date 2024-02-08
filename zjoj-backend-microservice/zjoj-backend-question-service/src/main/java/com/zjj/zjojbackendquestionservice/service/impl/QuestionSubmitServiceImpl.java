@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zjj.zjojbackendcommon.common.ErrorCode;
 import com.zjj.zjojbackendcommon.constant.CommonConstant;
 import com.zjj.zjojbackendcommon.exception.BusinessException;
-import com.zjj.zjojbackendserviceclient.service.JudgeService;
-import com.zjj.zjojbackendquestionservice.mapper.QuestionSubmitMapper;
+import com.zjj.zjojbackendcommon.utils.SqlUtils;
 import com.zjj.zjojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.zjj.zjojbackendmodel.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.zjj.zjojbackendmodel.model.entity.Question;
@@ -17,10 +16,11 @@ import com.zjj.zjojbackendmodel.model.entity.User;
 import com.zjj.zjojbackendmodel.model.enums.QuestionSubmitLanguageEnum;
 import com.zjj.zjojbackendmodel.model.enums.QuestionSubmitStatusEnum;
 import com.zjj.zjojbackendmodel.model.vo.QuestionSubmitVO;
+import com.zjj.zjojbackendquestionservice.mapper.QuestionSubmitMapper;
 import com.zjj.zjojbackendquestionservice.service.QuestionService;
 import com.zjj.zjojbackendquestionservice.service.QuestionSubmitService;
-import com.zjj.zjojbackendserviceclient.service.UserService;
-import com.zjj.zjojbackendcommon.utils.SqlUtils;
+import com.zjj.zjojbackendserviceclient.service.JudgeFeignClient;
+import com.zjj.zjojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
@@ -43,11 +43,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     private QuestionService questionService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     @Resource
     @Lazy
-    private JudgeService judgeService;
+    private JudgeFeignClient judgeFeignClient;
 
     /**
      * question submit
@@ -90,7 +90,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Long questionSubmitId = questionSubmit.getId();
         // judgeService
         CompletableFuture.runAsync(() -> {
-            judgeService.doJudge(questionSubmitId);
+            judgeFeignClient.doJudge(questionSubmitId);
         });
         return questionSubmitId;
 
@@ -144,7 +144,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         //Desensitivation: only current login user can see
         long userId = loginUser.getId();
         //if current login is not user who submit the question and this user is not admin -> cannot see code
-        if (userId != questionSubmit.getUserId() && !userService.isAdmin(loginUser)) {
+        if (userId != questionSubmit.getUserId() && !userFeignClient.isAdmin(loginUser)) {
             questionSubmitVO.setCode(null);
         }
         return questionSubmitVO;
