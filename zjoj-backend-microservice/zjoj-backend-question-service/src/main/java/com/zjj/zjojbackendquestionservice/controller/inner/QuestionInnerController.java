@@ -31,7 +31,7 @@ public class QuestionInnerController implements QuestionFeignClient {
      */
     @Override
     @GetMapping("/get/id")
-    public Question getById(@RequestParam("questionId") Long questionId){
+    public Question getById(@RequestParam("questionId") long questionId){
         return questionService.getById(questionId);
     }
 
@@ -42,7 +42,7 @@ public class QuestionInnerController implements QuestionFeignClient {
      */
     @Override
     @GetMapping("/question_submit/get/id")
-    public QuestionSubmit getQuestionSubmitById(@RequestParam("questionSubmitId") Long questionSubmitId){
+    public QuestionSubmit getQuestionSubmitById(@RequestParam("questionSubmitId") long questionSubmitId){
         return questionSubmitService.getById(questionSubmitId);
     }
 

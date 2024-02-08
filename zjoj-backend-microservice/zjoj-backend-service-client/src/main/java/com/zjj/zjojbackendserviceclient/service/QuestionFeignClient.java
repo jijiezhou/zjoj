@@ -21,7 +21,7 @@ public interface QuestionFeignClient{
      * @return
      */
     @GetMapping("/get/id")
-    Question getById(@RequestParam("questionId") Long questionId);
+    Question getById(@RequestParam("questionId") long questionId);
 
     /**
      * GetByQuestionSubmitId
@@ -29,7 +29,7 @@ public interface QuestionFeignClient{
      * @return
      */
     @GetMapping("/question_submit/get/id")
-    QuestionSubmit getQuestionSubmitById(@RequestParam("questionSubmitId") Long questionSubmitId);
+    QuestionSubmit getQuestionSubmitById(@RequestParam("questionSubmitId") long questionSubmitId);
 
     /**
      * update quesitonSubmit

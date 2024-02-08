@@ -31,7 +31,7 @@ public class UserInnerController implements UserFeignClient {
      */
     @Override
     @GetMapping("/get/id")
-    public User getById(@RequestParam("userId") Long userId){
+    public User getById(@RequestParam("userId") long userId){
         return userService.getById(userId);
     }
 

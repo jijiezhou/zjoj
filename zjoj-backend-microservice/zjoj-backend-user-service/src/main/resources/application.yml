@@ -58,5 +58,7 @@ mybatis-plus:
 # SandBoxConfiguraion
 codesandbox:
   type: remote
+knife4j:
+  enable: true
 
 

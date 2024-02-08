@@ -3,4 +3,23 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-
+    gateway:
+      routes:
+        - id: zjoj-backend-user-service
+          uri: lb://zjoj-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: zjoj-backend-question-service
+          uri: lb://zjoj-backend-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: zjoj-backend-judge-service
+          uri: lb://zjoj-backend-judge-service
+          predicates:
+            - Path=/api/judge/**
+  main:
+    web-application-type: reactive
+  application:
+    name: zjoj-backend-gateway
+server:
+  port: 8101
