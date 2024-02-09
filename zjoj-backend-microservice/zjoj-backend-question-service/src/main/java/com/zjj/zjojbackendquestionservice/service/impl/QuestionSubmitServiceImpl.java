@@ -17,6 +17,7 @@ import com.zjj.zjojbackendmodel.model.enums.QuestionSubmitLanguageEnum;
 import com.zjj.zjojbackendmodel.model.enums.QuestionSubmitStatusEnum;
 import com.zjj.zjojbackendmodel.model.vo.QuestionSubmitVO;
 import com.zjj.zjojbackendquestionservice.mapper.QuestionSubmitMapper;
+import com.zjj.zjojbackendquestionservice.rabbitmq.MyMessageProducer;
 import com.zjj.zjojbackendquestionservice.service.QuestionService;
 import com.zjj.zjojbackendquestionservice.service.QuestionSubmitService;
 import com.zjj.zjojbackendserviceclient.service.JudgeFeignClient;
@@ -28,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +48,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     @Lazy
     private JudgeFeignClient judgeFeignClient;
+
+    @Resource
+    private MyMessageProducer myMessageProducer;
 
     /**
      * question submit
@@ -88,10 +91,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "data insert fail");
         }
         Long questionSubmitId = questionSubmit.getId();
+        //send message to queue
+        myMessageProducer.sendMessage("code_exchange", "my_routingKey", String.valueOf(questionSubmitId));
         // judgeService
-        CompletableFuture.runAsync(() -> {
-            judgeFeignClient.doJudge(questionSubmitId);
-        });
+//        CompletableFuture.runAsync(() -> {
+//            judgeFeignClient.doJudge(questionSubmitId);
+//        });
         return questionSubmitId;
 
     }
