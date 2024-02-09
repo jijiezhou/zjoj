@@ -17,9 +17,20 @@ spring:
           uri: lb://zjoj-backend-judge-service
           predicates:
             - Path=/api/judge/**
-  main:
-    web-application-type: reactive
   application:
     name: zjoj-backend-gateway
+  main:
+    web-application-type: reactive
 server:
   port: 8101
+knife4j:
+  gateway:
+    # 1.open gateway aggregation component
+    enabled: true
+    # 2. mode: discovery, don't need to manually
+    strategy: discover
+    discover:
+      # ③ start discovery
+      enabled: true
+      # ④ swagger2
+      version: swagger2
