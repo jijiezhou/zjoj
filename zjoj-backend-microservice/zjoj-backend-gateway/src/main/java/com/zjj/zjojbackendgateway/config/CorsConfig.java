@@ -13,7 +13,7 @@ import java.util.Arrays;
  * @Classname CorsConfig
  * @Description TODO
  * @Author zjj
- * @Date 2/9/24 2:19 PM
+ * @Date 2/9/24 2:19PM
  */
 // Resolve CORS
 @Configuration

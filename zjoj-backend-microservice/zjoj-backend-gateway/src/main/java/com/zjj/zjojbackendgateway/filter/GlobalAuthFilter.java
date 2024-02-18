@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  * @Classname GlobalAuthFilter
  * @Description TODO
  * @Author zjj
- * @Date 2/9/24 2:23 PM
+ * @Date 2/9/24 2:23PM
  */
 @Component
 public class GlobalAuthFilter implements GlobalFilter, Ordered {
