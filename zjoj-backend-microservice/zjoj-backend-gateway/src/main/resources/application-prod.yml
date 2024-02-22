@@ -1,0 +1,37 @@
+# production environment configuration
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+    gateway:
+      routes:
+        - id: zjoj-backend-user-service
+          uri: lb://zjoj-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: zjoj-backend-question-service
+          uri: lb://zjoj-backend-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: zjoj-backend-judge-service
+          uri: lb://zjoj-backend-judge-service
+          predicates:
+            - Path=/api/judge/**
+  application:
+    name: zjoj-backend-gateway
+  main:
+    web-application-type: reactive
+server:
+  port: 8101
+knife4j:
+  gateway:
+    # ① open gateway component
+    enabled: true
+    # ② discover service
+    strategy: discover
+    discover:
+      # ③ discover
+      enabled: true
+      # ④ swagger2
+      version: swagger2
